@@ -2,16 +2,16 @@ const multer = require('koa-multer')
 const fs = require('fs')
 
 const destination = './uploads'
-// ensure log directory exists
+// ensure directory exists
 fs.existsSync(destination) || fs.mkdirSync(destination)
 
-// 配置  
+// 配置
 const storage = multer.diskStorage({
-  // 文件保存路径 
-  destination:function (req,file,cb) {
+  // 文件保存路径
+  destination: function (req, file, cb) {
       cb(null, 'uploads/')
-  },  
-  filename:function (req,file,cb){  
+  }, 
+  filename: function (req, file, cb) {
       var fileFormat = (file.originalname).split(".");  
       cb(null, Date.now() + "." + fileFormat[fileFormat.length - 1]); 
   }

@@ -10,7 +10,7 @@ function handleEvent (event) {
     len= files.length;
     while ( i < len) {
       info += files[i].name +"("+ files[i].type + "," +files[i].size +"bytes)<br/>";
-      formData.append("file"+i,files[i]);
+      formData.append("file", files[i]);
       i++;
     }
     output.innerHTML = info;
@@ -23,9 +23,10 @@ function handleEvent (event) {
       contentType: false,
       processData: false, //此处指定对上传数据不做默认的读取字符串的操作
       success:function (rs) {
-        console.log(rs);
+        output.innerHTML+= ('<p style="color:red;">' + rs.message + "</p>");
       },
       error:function (r) {
+        output.innerHTML+= ('<p style="color:red;">文件上传出错</p>');
         alert("文件上传出错！");
       }
     });

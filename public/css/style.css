@@ -1,1 +1,1 @@
-.filebox {width: 200px; height: 200px; background-color: #ff0000;color: #fff;}
+.filebox {height: 200px; line-height: 200px; background-color: darkgray;color: #fff; text-align: center; border-radius: 10px;}

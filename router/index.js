@@ -10,7 +10,7 @@ module.exports = app => {
   });
 
   // 文件上传
-  router.post('/uploadFile', fileUploads.single('file'), (ctx, next) => {
+  router.post('/uploadFile', fileUploads.array('file', 10), (ctx, next) => {
     ctx.body = {
       code: 200,
       message: '上传成功！'
