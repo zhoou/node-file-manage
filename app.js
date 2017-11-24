@@ -1,48 +1,47 @@
-/**
- * 监听temp文件夹，并将temp文件夹下的文件转移到destination文件夹下
- */
+// module require
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
+const Koa = require('koa')
+const servePath = require('koa-static')
+const morgan = require('koa-morgan')
+const rfs = require('rotating-file-stream')
+const views = require('koa-views')
 
-const events = require('events');
-const util = require('util');
-const fs = require('fs');
+// file require
+const config = require('./config')
+const routers = require('./router')
 
-const watchDir = './src/files/temp'
-const processDir = './src/files/destination'
+// 文件夹监听
+const fileWatcher = require('./controllers/fileTransform')
+fileWatcher.start();
 
-function Watcher (watchDir, processDir) {
-  this.watchDir = watchDir;
-  this.processDir = processDir;
-}
+const app = new Koa()
 
-Watcher.prototype.watch = function () {
-  var watcher = this;
-  fs.readdir(this.watchDir, function (err, files) {
-    if (err) throw err;
-    for (var index in files) {
-      watcher.emit('process', files[index])
-    }
-  })
-}
+app.use(servePath(path.join(__dirname, 'public')))
 
-Watcher.prototype.start = function () {
-  console.log("start watching......")
-  var watcher = this;
-  fs.watchFile(this.watchDir, function() {
-    watcher.watch();
-  })
-}
-
-util.inherits(Watcher, events.EventEmitter); // 相当于 Watcher.prototype = new events.EventEmitter();
-
-const watcher = new Watcher(watchDir, processDir);
-
-watcher.on('process', function process(file) {
-  let watchFile = this.watchDir + '/' + file;
-  let processFile = this.processDir + '/' + Date.parse(new Date()) + '-' + file.toLowerCase();
-
-  fs.rename(watchFile, processFile, function (err) {
-    if (err) throw err;
-  })
+const logDirectory = path.join(__dirname, 'logs')
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+// create a rotating write stream
+const accessLogStream = rfs('access.log', {
+  interval: '1d', // rotate daily
+  path: logDirectory
 })
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}))
 
-watcher.start();
+app.use(views(__dirname + '/views', {
+  map: {
+    html: 'ejs'
+  }
+}));
+
+routers(app)
+
+app.on('error', (err, ctx) => {
+  console.error('server error', err);
+});
+
+app.listen(config.port)
+console.log("Server is listening 3000...")

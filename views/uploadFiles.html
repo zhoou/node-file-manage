@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script src="/js/jquery-3.2.1.min.js"></script>
+  <script src="/js/events.js"></script>
+  <script src="/js/uploadFiles.js"></script>
+</head>
+<body>
+  <div class="container">
+      <div class="alert alert-info" role="alert">
+        <p class="text-center">文件管理--DEMO</p>
+      </div>
+    <div class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">文件表单上传</div>
+        <div class="panel-body">
+            <form action="/uploadFile" method="post" enctype="multipart/form-data">  
+              <input type="file" name="file" class="form-control"/>
+              <button type="submit" class="btn btn-primary">上传</button>
+            </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">文件拖拽上传</div>
+          <div class="panel-body">
+              <div id="a1" class="filebox">拖拽到此</div>
+              <div id="out-input"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
